@@ -1,0 +1,15 @@
+# build output
+*.o
+wserver
+wclient
+*.cgi
+# exploration apps
+exploration/express_app/node_modules/
+exploration/express_app/package-lock.json
+exploration/springboot_app/target/
+__pycache__/
+.venv/
+# OS / editor
+.DS_Store
+.vscode/
+.idea/

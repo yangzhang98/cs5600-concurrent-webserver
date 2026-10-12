@@ -1,0 +1,26 @@
+sequenceDiagram
+    autonumber
+    title Workflow 2: Traffic burst, full buffer and a dynamic CGI request
+    participant C as Clients (burst)
+    participant M as Master thread
+    participant Q as Shared request buffer<br/>(capacity B)
+    participant W as Busy worker
+    participant P as CGI child process
+
+    Note over W,P: All N workers are busy, e.g. running long CGI jobs
+    W->>P: fork() + exec("spin.cgi?5"), QUERY_STRING set
+    C->>M: many new connections arrive at once
+    loop until buffer has B requests
+        M->>Q: lock, put(conn_fd), signal(not_empty), unlock
+    end
+    C->>M: one more connection
+    M->>Q: lock(mutex)
+    Note over M,Q: count == B, so wait(not_full, mutex)<br/>Master sleeps and stops accepting (backpressure).<br/>New clients pile up in the kernel accept backlog.
+    P-->>W: CGI output written to client, child exits
+    W->>W: waitpid(child), close(conn_fd)
+    W->>Q: lock(mutex), get() next request, count--
+    W->>Q: signal(not_full), unlock(mutex)
+    Q-->>M: master wakes up holding the mutex
+    M->>Q: put(conn_fd), signal(not_empty), unlock(mutex)
+    M->>M: back to accept()
+    Note over C,Q: Queueing delay = t_dequeue - t_arrive.<br/>This is the part that blows up p99 latency during bursts.

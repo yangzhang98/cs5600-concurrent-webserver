@@ -1,0 +1,29 @@
+sequenceDiagram
+    autonumber
+    title Workflow 3 (research extension): Adaptive thread pool resizing
+    participant Mon as Monitor thread
+    participant Q as Shared request buffer
+    participant P as Pool state<br/>(pool mutex: n_workers, n_idle, retire_target)
+    participant NW as New worker
+    participant IW as Idle worker
+
+    loop every sampling interval (e.g. 50 ms)
+        Mon->>Q: lock, read queue length q, unlock
+        Mon->>P: lock, read n_workers and n_idle, unlock
+        alt q > high watermark for k samples in a row AND n_workers < max
+            Mon->>P: lock, n_workers++, unlock
+            Mon->>NW: pthread_create(worker_loop)
+            NW->>Q: lock, wait(not_empty) or take a request
+            Note over Mon,NW: Grow fast so the burst does not build up a queue
+        else n_idle > 0 AND q == 0 for a longer window AND n_workers > min
+            Mon->>P: lock, retire_target++, unlock
+            Mon->>Q: broadcast(not_empty)
+            IW->>Q: wakes up, sees count == 0
+            IW->>P: lock, retire_target > 0, so retire_target--, n_workers--, unlock
+            IW->>IW: unlock buffer, pthread_exit()
+            Note over Mon,IW: Shrink slowly (hysteresis) so the pool does not flap
+        else otherwise
+            Mon->>Mon: keep current size
+        end
+        Mon->>Mon: log (time, q, n_workers) for the thread-count plot
+    end
