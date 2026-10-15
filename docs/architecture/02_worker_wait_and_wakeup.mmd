@@ -1,0 +1,40 @@
+sequenceDiagram
+    title Diagram 2: Server startup, idle workers waiting, and wake-up
+    actor C as Client
+    participant M as Master thread
+    participant B as Request buffer<br/>(bounded queue + mutex)
+
+    activate M
+    M->>M: parse -t threads -b buffers -s FIFO|SFF
+    M->>+B: init(capacity = buffers), count = 0
+    B-->>-M: ready
+    create participant W1 as Worker 1
+    M->>W1: pthread_create(worker_loop)
+    create participant W2 as Worker 2
+    M->>W2: pthread_create(worker_loop)
+    Note over M,W2: ... one thread per -t, all created at start (fixed-size pool)
+
+    W1->>B: lock(mutex)
+    loop while count == 0
+        W1->>B: wait(not_empty) - releases mutex and sleeps
+    end
+    W2->>B: lock(mutex)
+    loop while count == 0
+        W2->>B: wait(not_empty) - releases mutex and sleeps
+    end
+    Note over W1,W2: No busy-waiting: idle workers sleep on the condition variable
+
+    M->>M: listen() and block in accept()
+    C->>M: new connection
+    M->>+B: lock, put(conn_fd), count = 1
+    B--)W1: signal(not_empty) wakes exactly one worker
+    M->>B: unlock(mutex)
+    deactivate B
+    deactivate M
+    B-->>W1: wait() returns, mutex re-acquired, count = 1
+    activate W1
+    W1->>B: get() request, count = 0, unlock(mutex)
+    W1->>W1: handle request (same as Diagram 1)
+    W1->>C: response
+    deactivate W1
+    Note over W2: Worker 2 keeps sleeping because count is still 0

@@ -1,0 +1,31 @@
+sequenceDiagram
+    title Diagram 1: Handling one HTTP request (FIFO) - main critical path
+    actor C as Client
+    participant M as Master thread
+    participant B as Request buffer<br/>(bounded queue + mutex)
+    participant W as Worker thread
+
+    C->>+M: connect + "GET /page HTTP/1.0"
+    M->>M: accept() -> conn_fd, record t_arrive
+    M->>+B: lock(mutex)
+    B-->>-M: lock acquired
+    M->>+B: put(conn_fd, t_arrive), count++
+    B--)W: signal(not_empty)
+    M->>B: unlock(mutex)
+    deactivate B
+    Note over M: Master never reads the request.<br/>It goes straight back to accept().
+    deactivate M
+
+    W->>+B: lock(mutex), get() oldest request
+    B-->>-W: conn_fd, t_arrive (count--)
+    activate W
+    W--)B: signal(not_full), unlock(mutex)
+    W->>W: record t_dequeue
+    W->>C: read request line + headers
+    C-->>W: request text
+    W->>W: parse request, build response
+    W->>C: write "HTTP/1.0 200 OK" + headers + body
+    W->>C: close(conn_fd)
+    W->>W: record t_done (latency = t_done - t_arrive)
+    deactivate W
+    Note over W: Worker loops back and waits for the next request

@@ -15,7 +15,7 @@ We are building a multi-threaded web server in C, using a master thread, a bound
 | Team bio | [`docs/team_bio.pdf`](docs/team_bio.pdf) |
 | Executive summary & research proposal | [`docs/proposal.pdf`](docs/proposal.pdf) |
 | Exploration report (3 existing systems) | [`docs/exploration.md`](docs/exploration.md), screenshots in `docs/images/` |
-| System architecture (3 UML sequence diagrams) | [`docs/architecture/sequence_diagrams.pdf`](docs/architecture/sequence_diagrams.pdf), Mermaid sources `*.mmd` |
+| System architecture (3 UML sequence diagrams) | [`docs/architecture/sequence_diagrams.pdf`](docs/architecture/sequence_diagrams.pdf), PNGs + Mermaid sources in `docs/architecture/` (extension sketches in `docs/architecture/extension_cases/`) |
 
 ## Repository Layout
 
@@ -26,7 +26,8 @@ docs/
   proposal.pdf
   exploration.md
   images/                 screenshots from our VM
-  architecture/           sequence diagrams (.mmd sources, .png, combined PDF)
+  architecture/           3 sequence diagrams (.mmd, .png) + combined PDF
+    extension_cases/      diagrams for possible extensions
   src/                    Markdown sources for the PDFs
   contribution_tracker.xlsx
 exploration/              test apps + load script used in the exploration report

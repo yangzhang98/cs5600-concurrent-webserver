@@ -1,0 +1,32 @@
+sequenceDiagram
+    title Diagram 3: Buffer full - master blocks until a worker frees a slot
+    actor C as Clients (burst)
+    participant M as Master thread
+    participant B as Request buffer<br/>(capacity = B slots)
+    participant W as Worker thread
+
+    activate W
+    Note over W: All workers are busy handling earlier requests
+    C->>+M: many connections arrive at once
+    loop for each new connection
+        M->>B: lock(mutex)
+        alt count < B
+            M->>B: put(conn_fd), count++
+            B--)W: signal(not_empty)
+        else count == B (buffer full)
+            M->>B: wait(not_full) - releases mutex and sleeps
+            Note over M,B: Master stops calling accept().<br/>New clients wait in the kernel backlog.
+            W->>W: finish current request
+            W->>B: lock, get() next request, count--
+            B--)M: signal(not_full)
+            W->>B: unlock(mutex)
+            B-->>M: wait() returns, mutex re-acquired
+            M->>B: put(conn_fd), count++
+        end
+        M->>B: unlock(mutex)
+    end
+    deactivate M
+    W->>W: handle the request it just took
+    W->>C: response
+    deactivate W
+    Note over C,W: Waiting time in the buffer = t_dequeue - t_arrive.<br/>This queueing delay is what raises p99 latency under load.
