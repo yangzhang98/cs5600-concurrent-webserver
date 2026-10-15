@@ -1,0 +1,13 @@
+Running 20s test @ http://127.0.0.1:8003/cpu?ms=20
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    66.31ms   12.62ms 290.90ms   89.59%
+    Req/Sec   242.69     25.28   376.00     75.76%
+  Latency Distribution
+     50%   65.04ms
+     75%   67.24ms
+     90%   70.98ms
+     99%  109.04ms
+  19407 requests in 20.08s, 2.26MB read
+Requests/sec:    966.40
+Transfer/sec:    115.31KB
