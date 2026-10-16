@@ -37,6 +37,6 @@ src/                      our web server (Sprint 2 onward)
 
 ## Team
 
-- Yang (Selena) Zhang
-- [Teammate 2]
-- [Teammate 3]
+- Yang (Selena) Zhang (@yangzhang98)
+- Minyuan Wang (@minyuan1209)
+- Yao Qin (@Aureliasusu)

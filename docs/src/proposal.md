@@ -8,9 +8,9 @@ OSTEP Project G.5, Concurrent Web Server
 
 | Name | Email |
 |---|---|
-| Yang (Selena) Zhang | [your Northeastern email] |
-| [Teammate 2] | [email] |
-| [Teammate 3] | [email] |
+| Yang (Selena) Zhang | zhang.yang18@northeastern.edu |
+| Minyuan Wang | wang.miny@northeastern.edu |
+| Yao Qin | qin.yao1@northeastern.edu |
 
 ## 2. Abstract
 
