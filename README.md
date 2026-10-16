@@ -6,7 +6,7 @@ We are building a multi-threaded web server in C, using a master thread, a bound
 
 ## Contribution Tracker
 
-**[Contribution tracker (Excel / Google Sheet)](PASTE-SHAREABLE-LINK-HERE)**. Shared with the professor and TAs. A starting template is in `docs/contribution_tracker.xlsx`.
+**[Contribution tracker (Excel on Northeastern OneDrive)](https://northeastern-my.sharepoint.com/:x:/r/personal/zhang_yang18_northeastern_edu/Documents/Microsoft%20Teams%20Chat%20Files/contribution_tracker.xlsx?d=wcce97c96934d48a9a7fdd83f74f0cf0c&csf=1&web=1&e=Hk1CsO)**. Shared with the professor and TAs. A snapshot is also in `docs/contribution_tracker.xlsx`.
 
 ## Sprint 1 Deliverables
 
