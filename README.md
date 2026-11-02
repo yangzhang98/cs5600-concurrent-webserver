@@ -10,28 +10,91 @@ We are building a multi-threaded web server in C, using a master thread, a bound
 
 ## Build & Run
 
-Requires `gcc` (or `clang`) and `make`. Tested on Ubuntu.
+Tested on Ubuntu (gcc) and macOS (clang). Both build with **0 warnings**.
+
+### 1. Install the tools (first time only)
+
+- **Ubuntu / Debian:**
+  ```bash
+  sudo apt update
+  sudo apt install -y build-essential git curl
+  ```
+- **macOS:** `xcode-select --install` (installs `clang`, `make` and `git`; `curl` is already there).
+
+### 2. Get the code and build
 
 ```bash
-make                                    # builds ./wserver
+git clone https://github.com/yangzhang98/cs5600-concurrent-webserver.git
+cd cs5600-concurrent-webserver
+make                 # builds ./wserver
+```
+
+### 3. Start the server (terminal 1)
+
+```bash
 ./wserver -p 8080 -t 4 -b 16 -s FIFO
 ```
+
+You should see:
+
+```
+wserver listening on port 8080 (threads=4, buffers=16, sched=FIFO)
+```
+
+The server keeps running in this terminal and waits for connections. This is expected.
+
+### 4. Send a request (terminal 2)
+
+Open a **second** terminal and run:
+
+```bash
+curl -i http://localhost:8080/
+```
+
+Expected output:
+
+```
+HTTP/1.1 200 OK
+Content-Type: text/plain
+Content-Length: 14
+Connection: close
+
+Hello, World!
+```
+
+Terminal 1 also prints the request line, e.g. `[http] GET / HTTP/1.1`. You can also open `http://localhost:8080/` in a browser.
+
+### 5. Stop the server
+
+Go back to terminal 1 and press **Ctrl+C**. The server catches `SIGINT`, closes the listening socket, frees the pool and exits:
+
+```
+shutting down...
+```
+
+```bash
+echo $?        # prints 0 = clean exit
+make clean     # removes the .o files and ./wserver
+```
+
+### Command-line options
 
 | Flag | Meaning | Default |
 |---|---|---|
 | `-p` | port | 10000 |
-| `-t` | number of worker threads | 1 |
-| `-b` | request buffer size | 1 |
+| `-t` | number of worker threads (stub in Sprint 2) | 1 |
+| `-b` | request buffer size (stub in Sprint 2) | 1 |
 | `-s` | scheduling policy: `FIFO` or `SFF` | FIFO |
 
-From another terminal:
+An invalid option (e.g. `./wserver -s BAD`) prints the usage line and exits with code 1.
 
-```bash
-curl -i http://localhost:8080/
-# HTTP/1.1 200 OK ... Hello, World!
-```
+### Troubleshooting
 
-Press **Ctrl+C** to stop. The server catches `SIGINT`, closes the listening socket, frees the pool and exits with code 0. `make clean` removes build output.
+| Problem | Cause / fix |
+|---|---|
+| `bind: Address already in use` | Another server is still using the port. Stop it, or use another port, e.g. `-p 8081`. |
+| `curl: (7) Failed to connect ... Connection refused` | The server isn't running, or the port in `curl` doesn't match `-p`. |
+| `make: command not found` / `cc: command not found` | Install the tools in step 1. |
 
 ## Contribution Tracker
 
