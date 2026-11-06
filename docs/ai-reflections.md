@@ -25,5 +25,7 @@ Where it went wrong: its first summary of httpd said the pool "doubles threads" 
 ### Yao Qin
 
 I used ChatGPT and Claude this sprint, mainly to understand the concurrency ideas behind our server, like the producer-consumer model, bounded queues, and how worker threads get scheduled, and to think through how we should evaluate AdaptivePool.
+
 What helped most was talking through how different pool sizes might behave under different workloads. It pushed me to look beyond throughput and see why p99 latency, queueing delay, and average thread count matter for an adaptive pool. It also helped me understand why our pool grows fast under queue pressure but shrinks slowly when idle.
+
 Where it went wrong: AI sometimes made performance explanations sound more convincing than our evidence supported. In our Sprint 1 exploration, our CPU workload used wall-clock busy waiting, which looked reasonable but counted time spent waiting for the CPU as real work, so the results were misleading. We had to go back to the code and redefine the workload ourselves. My takeaway is that AI is good for exploring ideas, but it can’t replace carefully designed experiments and our own reasoning about the results.
