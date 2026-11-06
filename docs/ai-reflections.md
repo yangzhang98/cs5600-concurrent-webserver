@@ -12,7 +12,7 @@ I mainly used Claude (in the claude.ai app) this sprint. I used it to plan how t
 
 What helped most: it mapped each source file to a role in our sequence diagrams, which made the code easier for me to explain. It also pulled up the real nginx and httpd source, and while doing that we noticed something we'd missed: nginx does *not* block when its thread pool queue is full, it just returns an error. That ended up in our Research Extension Update.
 
-Where it went wrong: its first summary of httpd said the pool "doubles threads" each round, but after reading the actual source it turned out httpd doubles *child processes*, not threads. Also, its own test script had a bug at first (it read an old log file and fired requests before the server was up), so it looked like the server was broken when it wasn't.And it couldn't verify one of our book citations at first, so we went back to the actual PDF and checked the chapter and page numbers ourselves. Main lesson: I still have to check everything against the real source myself.
+Where it went wrong: its first summary of httpd said the pool "doubles threads" each round, but after reading the actual source it turned out httpd doubles *child processes*, not threads. Also, its own test script had a bug at first (it read an old log file and fired requests before the server was up), so it looked like the server was broken when it wasn't. And it couldn't verify one of our book citations at first, so we went back to the actual PDF and checked the edition and chapter ourselves. Main lesson: I still have to check everything against the real source myself.
 
 ### Minyuan Wang
 
