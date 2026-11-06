@@ -16,7 +16,11 @@ Where it went wrong: its first summary of httpd said the pool "doubles threads" 
 
 ### Minyuan Wang
 
-<!-- 100–200 words: which tools, for what; where AI helped; where it was wrong or didn't help. If you didn't use AI, explain why. -->
+   I used ChatGPT and Claude this sprint, mostly to look up papers for our bibliography, to think through how our code should be structured, and to help write some of the code.
+
+   Where it helped most was designing the main function for our skeleton. Talking it through with AI gave me a starting point for how the server should be laid out, which saved time compared to starting from a blank file.
+
+   Where it went wrong: when we were designing the main function, some of what AI suggested didn't match the structure our team had already agreed on, so we ended up not using it. AI doesn't know how our team wants the pieces to fit together, so I couldn't just take its code as is and had to bring in my own thinking for each function. In the end, AI was a helper, but the main logic and design ideas came from the three of us working together.
 
 ### Yao Qin
 
