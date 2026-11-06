@@ -66,7 +66,7 @@ Under bursty traffic, AdaptivePool (exponential grow, one-at-a-time shrink, boun
 
 **Relevance:** Arachne adapts to load like we do, but it adapts *cores*, not *threads*, and that distinction is our main threat: on a VM with few cores, adding threads cannot add CPU. This shaped our "where we expect to lose" list, especially CPU-bound requests on few cores.
 
-### [4] Derek DeJonghe, "Chapter 30: Performance Tuning (pp. 157–163)," *Complete NGINX Cookbook: Advanced Recipes for Operations*, O'Reilly Media, 2017. [Link](https://ftp.jaist.ac.jp/pub/sourceforge.jp/c3rb3ru5prjct/69609/Complete_NGINX_Cookbook.pdf)
+### [4] Derek DeJonghe, "Chapter 30: Performance Tuning," *Complete NGINX Cookbook: Advanced Recipes for Operations*, O'Reilly Media, 2017. [Link](https://ftp.jaist.ac.jp/pub/sourceforge.jp/c3rb3ru5prjct/69609/Complete_NGINX_Cookbook.pdf)
 
 **Category:** Book
 
